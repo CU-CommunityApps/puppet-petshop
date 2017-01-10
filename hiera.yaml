@@ -1,0 +1,12 @@
+:backends:
+  - eyaml
+  - yaml
+:yaml:
+  :datadir: '/modules/petshop/hiera-data'
+:eyaml:
+  :datadir: '/modules/petshop/hiera-data'
+  :pkcs7_private_key: /keys/petshop.private_key.pkcs7.pem
+  :pkcs7_public_key:  /keys/petshop.public_key.pkcs7.pem
+:hierarchy:
+  - '%{environment}'
+  - common

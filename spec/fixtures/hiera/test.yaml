@@ -1,0 +1,3 @@
+environment: 'petshop-unit'
+petshop_user_id: 'petshop-test@cornell.edu'
+petshop_password: 'somepassword'
