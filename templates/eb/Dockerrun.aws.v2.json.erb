@@ -6,9 +6,9 @@
   },
   "volumes": [
     {
-      "name": "petshop-efs-mount",
+      "name": "host-tmp",
       "host": {
-        "sourcePath": "/mnt/efs/petshop"
+        "sourcePath": "/tmp"
       }
     }
   ],
@@ -26,8 +26,8 @@
       "memory": <%= @container_memory_mb %>,
       "mountPoints": [
         {
-          "sourceVolume": "petshop-efs-mount",
-          "containerPath": "/var/petshop",
+          "sourceVolume": "host-tmp",
+          "containerPath": "/tmp/host-tmp",
           "readOnly": false
         }
       ],
