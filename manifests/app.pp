@@ -31,7 +31,7 @@ class petshop::app (
     }
 
     exec { 'eb-package' :
-      command => "zip -r /tmp/build-${environment}.v${build_number}.zip /tmp/build"
+      command => "/usr/bin/zip -r /tmp/build-${environment}.v${build_number}.zip /tmp/build"
     }
 
     file { [
