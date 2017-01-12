@@ -30,7 +30,8 @@ class petshop::app (
       content  => template('petshop/eb/Dockerrun.aws.v2.json.erb'),
     } ->
     exec { 'eb-package' :
-      command => "/usr/bin/zip -r /tmp/build-${environment}.v${build_number}.zip /tmp/build",
+      command => "/usr/bin/zip -r build-${environment}.v${build_number}.zip build",
+      cwd     => "/tmp"
     }
 
     file { [
