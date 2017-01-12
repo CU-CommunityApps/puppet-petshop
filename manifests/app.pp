@@ -5,8 +5,8 @@ class petshop::app (
   ) {
 
     file { [
-      "/tmp/build",
-      "/tmp/build/.ebextensions"
+      '/tmp/build',
+      '/tmp/build/.ebextensions'
       ] :
       ensure  => directory,
       owner   => www-data,
@@ -14,7 +14,7 @@ class petshop::app (
       mode    => 0775,
     }
 
-    file { "/tmp/build/.ebextensions/utils.config" :
+    file { '/tmp/build/.ebextensions/utils.config' :
       ensure  => present,
       owner   => www-data,
       group   => www-data,
@@ -22,12 +22,16 @@ class petshop::app (
       content  => template('petshop/eb/utils.config.erb'),
     }
 
-    file { "/tmp/build/Dockerrun.aws.json" :
+    file { '/tmp/build/Dockerrun.aws.json' :
       ensure  => present,
       owner   => www-data,
       group   => www-data,
       mode    => 0644,
       content  => template('petshop/eb/Dockerrun.aws.v2.json.erb'),
+    }
+
+    exec { 'eb-package' :
+      command => "zip -r /tmp/build-${environment}.v${build_number}.zip /tmp/build"
     }
 
     file { [
