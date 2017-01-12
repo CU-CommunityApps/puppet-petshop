@@ -1,2 +1,3 @@
 petshop_user_id: 'pea1-prod@cornell.edu'
 petshop_password: 'dummypassword'
+container_memory_mb: 384

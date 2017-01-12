@@ -1,7 +1,34 @@
 class petshop::app (
   $petshop_user_id = hiera('petshop_user_id'),
-  $petshop_password = hiera('petshop_password')
+  $petshop_password = hiera('petshop_password'),
+  $container_memory_mb = hiera('container_memory_mb')
   ) {
+
+    file { [
+      "/tmp/build",
+      "/tmp/build/.ebextensions"
+      ] :
+      ensure  => directory,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0775,
+    }
+
+    file { "/tmp/build/.ebextensions/utils.config" :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0644,
+      content  => template('petshop/eb/utils.config.erb'),
+    }
+
+    file { "${$boomi_home_dir}/build/Dockerrun.aws.json" :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0644,
+      content  => template('petshop/eb/Dockerrun.aws.v2.json.erb'),
+    }
 
     file { [
         '/tmp/sample',
