@@ -1,9 +1,12 @@
-packages:
-  yum:
-    # Nice to have nano on instances if you are not a VIM user.
-    nano: []
-
+files:
+  "/tmp/example.conf":
+    mode: "000755"
+    owner: root
+    group: root
+    contents: |
+      # This is an example configuration file that is templated during Puppet build.
+      my.custom.property = <%= @container_memory_mb %>
 
 commands:
   999-complete:
-    command:  "logger utils.config complete"
+    command: "logger utils.config complete"
