@@ -14,24 +14,23 @@ class petshop::app (
       mode    => 0775,
     }
 
+    # These resources are applied in order, as told by "->"
     file { '/tmp/build/.ebextensions/utils.config' :
       ensure  => present,
       owner   => www-data,
       group   => www-data,
       mode    => 0644,
       content  => template('petshop/eb/utils.config.erb'),
-    }
-
+    } ->
     file { '/tmp/build/Dockerrun.aws.json' :
       ensure  => present,
       owner   => www-data,
       group   => www-data,
       mode    => 0644,
       content  => template('petshop/eb/Dockerrun.aws.v2.json.erb'),
-    }
-
+    } ->
     exec { 'eb-package' :
-      command => "/usr/bin/zip -r /tmp/build-${environment}.v${build_number}.zip /tmp/build"
+      command => "/usr/bin/zip -r /tmp/build-${environment}.v${build_number}.zip /tmp/build",
     }
 
     file { [
