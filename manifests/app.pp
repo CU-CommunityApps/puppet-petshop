@@ -22,7 +22,7 @@ class petshop::app (
       content  => template('petshop/eb/utils.config.erb'),
     }
 
-    file { "${$boomi_home_dir}/build/Dockerrun.aws.json" :
+    file { "/tmp/build/Dockerrun.aws.json" :
       ensure  => present,
       owner   => www-data,
       group   => www-data,
