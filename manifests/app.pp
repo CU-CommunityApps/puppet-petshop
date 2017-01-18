@@ -36,7 +36,8 @@ class petshop::app (
 
     file { [
         '/tmp/sample',
-        '/tmp/example'] :
+        '/tmp/example',
+        '/tmp/secrets'] :
         ensure  => directory,
         owner   => www-data,
         group   => www-data,
@@ -49,6 +50,22 @@ class petshop::app (
       group   => www-data,
       mode    => 0644,
       source => "puppet:///modules/petshop/sample.${environment}.conf",
+    }
+
+    file { '/tmp/secrets/service.conf.encrypted' :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0644,
+      source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
+    }
+
+    file { '/tmp/secrets/kms-decrypt-files.sh' :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0755,
+      source => "puppet:///modules/petshop/kms-secrets/kms-decrypt-files.sh",
     }
 
     file { '/tmp/example/example.conf' :
