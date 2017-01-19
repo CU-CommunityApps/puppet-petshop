@@ -14,7 +14,7 @@ AWS_REGION=us-east-1
 for FILE in "$@"
 do
   BYTES=`wc -c < $FILE`
-  echo "Processing $FILE - $BYTES bytes"
+  echo "Processing $FILE - $BYTES bytes. Saving to $FILE.encrypted."
   if [$BYTES -ge $MAX_BYTES ]; then
     echo "Skipping $FILE because it is too big to encrypt directly with KMS (4KB)."
   else
