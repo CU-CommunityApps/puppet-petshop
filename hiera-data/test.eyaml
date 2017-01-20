@@ -1,3 +1,6 @@
-petshop_user_id: 'pea1-test@cornell.edu'
-petshop_password: 'dummypassword'
+petshop_password: >
+  ENC[KMS,AQECAHhpScaf3XF9NVK+U6wXpeDoju8w8Ccbz3O4+LbMCXi+UQAA
+  AHMwcQYJKoZIhvcNAQcGoGQwYgIBADBdBgkqhkiG9w0BBwEwHgYJYIZIAWUD
+  BAEuMBEEDGE93cql49twTp6v/QIBEIAwTqxYUokHHCn04jmHUs57JQSKp7K2
+  yRW9euI35OLIZ4vSwCJT+Mp5eW8DIfMkkhO9]
 container_memory_mb: 384
