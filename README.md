@@ -21,6 +21,12 @@ eyaml decrypt -f service.dev.conf.eyaml-encrypted > service.dev.conf.eyaml-decry
 diff --report-identical-files service.dev.conf service.dev.conf.eyaml-decrypted
 ````
 
+## Use hiera directly from within container
+
+```
+hiera -c /modules/petshop/hiera.yaml petshop_password environment=local
+```
+
 
 ## Setup the project to pull the puppet-petshop project from Github:
 
