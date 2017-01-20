@@ -75,7 +75,7 @@ class petshop::app (
     # Setting up for manual decryption at launch
     ############################################
     file { [
-        'tmp/secrets',
+        '/tmp/secrets',
         '/tmp/secrets/hiera-eyaml-kms'] :
         ensure  => directory,
         owner   => www-data,
