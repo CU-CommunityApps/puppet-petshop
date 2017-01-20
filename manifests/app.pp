@@ -82,7 +82,7 @@ class petshop::app (
         mode    => 0755,
     }
 
-    file { '/etc/eyaml/eyaml.config' :
+    file { '/etc/eyaml/config.yaml' :
       ensure  => present,
       owner   => root,
       group   => root,
