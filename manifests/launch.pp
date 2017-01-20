@@ -10,28 +10,36 @@ class petshop::launch (
     file { [
         '/tmp/launch'
         ] :
-        ensure  => directory,
-        owner   => www-data,
-        group   => www-data,
-        mode    => 0775,
+      ensure  => 'directory',
+      owner   => 'www-data',
+      group   => 'www-data',
+      mode    => '0775',
     }
 
     file { '/tmp/launch/kms-decrypt-files.sh' :
-      ensure  => present,
+    ensure  => 'present',
       owner   => www-data,
       group   => www-data,
       mode    => 0755,
-      source => "puppet:///modules/petshop/kms-secrets/kms-decrypt-files.sh",
+      source => 'puppet:///modules/petshop/kms-secrets/kms-decrypt-files.sh',
     } ->
     file { '/tmp/launch/service.conf.encrypted' :
-      ensure  => present,
-      owner   => www-data,
-      group   => www-data,
-      mode    => 0644,
+      ensure  => 'present',
+      owner   => 'www-data',
+      group   => 'www-data',
+      mode    => '0644',
       source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
     } ->
-    exec { 'decrypt' :
-      command => "/tmp/launch/kms-decrypt-files.sh service.conf.encrypted",
-      cwd     => "/tmp/launch"
+    exec { 'decrypt_launch_secrets' :
+      command => '/tmp/launch/kms-decrypt-files.sh service.conf.encrypted',
+      cwd     => '/tmp/launch',
     }
-  }
+
+    file { '/tmp/launch/service.conf' :
+      ensure  => 'present',
+      replace => 'no',
+      owner   => 'www-data',
+      group   => 'www-data',
+      mode    => '0400',
+    }
+}
