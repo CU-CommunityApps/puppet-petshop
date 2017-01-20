@@ -21,7 +21,7 @@ class petshop::launch (
     #######################################
 
     exec { 'eyaml_decrypt_secrets' :
-      command => '/usr/local/bin/eyaml decrypt -f service.conf.eyaml-encrypted > service.conf',
+      command => '/usr/local/bin/eyaml decrypt --trace -f service.conf.eyaml-encrypted &> service.conf',
       cwd     => '/tmp/secrets/hiera-eyaml-kms/',
     }
 
