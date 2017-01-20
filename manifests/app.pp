@@ -82,6 +82,14 @@ class petshop::app (
         mode    => 0775,
     }
 
+    file { '/tmp/secrets/hiera-eyaml-kms/eyaml.config' :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0644,
+      source => "puppet:///modules/petshop/kms-secrets/eyaml.config",
+    }
+
     file { '/tmp/secrets/hiera-eyaml-kms/service.conf.eyaml-encrypted' :
       ensure  => present,
       owner   => www-data,
