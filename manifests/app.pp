@@ -4,6 +4,9 @@ class petshop::app (
   $container_memory_mb = hiera('container_memory_mb')
   ) {
 
+    ###########################################################
+    # Setting up for Elastic Beanstalk deployment package build
+    ###########################################################
     file { [
       '/tmp/build',
       '/tmp/build/.ebextensions'
@@ -33,11 +36,66 @@ class petshop::app (
       command => "/usr/bin/zip ../${app_name}-${environment}-${build_number}.zip -r * .ebextensions",
       cwd     => "/tmp/build"
     }
+    ###########################################################
+    # End setup for Elastic Beanstalk deployment package build
+    ###########################################################
+
+    ############################################
+    # Setting up for manual decryption at launch
+    ############################################
+    file { [
+        '/tmp/secrets/manual-kms'] :
+        ensure  => directory,
+        owner   => www-data,
+        group   => www-data,
+        mode    => 0775,
+    }
+
+    file { '/tmp/secrets/manual-kms/service.conf.encrypted' :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0644,
+      source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
+    }
+
+    file { '/tmp/secrets/manual-kms/kms-decrypt-files.sh' :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0755,
+      source => "puppet:///modules/petshop/kms-secrets/kms-decrypt-files.sh",
+    }
+    ############################################
+    # End manual decryption SETUP
+    ############################################
+
+    ############################################
+    # Setting up for manual decryption at launch
+    ############################################
+    file { [
+        '/tmp/secrets/hiera-eyaml-kms'] :
+        ensure  => directory,
+        owner   => www-data,
+        group   => www-data,
+        mode    => 0775,
+    }
+
+    file { '/tmp/secrets/hiera-eyaml-kms/service.conf.eyaml-encrypted' :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0644,
+      source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.eyaml-encrypted",
+    }
+
+    ############################################
+    # End setup for manual decryption at launch
+    ############################################
 
     file { [
         '/tmp/sample',
-        '/tmp/example',
-        '/tmp/secrets'] :
+        '/tmp/example'] :
         ensure  => directory,
         owner   => www-data,
         group   => www-data,
@@ -50,22 +108,6 @@ class petshop::app (
       group   => www-data,
       mode    => 0644,
       source => "puppet:///modules/petshop/sample.${environment}.conf",
-    }
-
-    file { '/tmp/secrets/service.conf.encrypted' :
-      ensure  => present,
-      owner   => www-data,
-      group   => www-data,
-      mode    => 0644,
-      source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
-    }
-
-    file { '/tmp/secrets/kms-decrypt-files.sh' :
-      ensure  => present,
-      owner   => www-data,
-      group   => www-data,
-      mode    => 0755,
-      source => "puppet:///modules/petshop/kms-secrets/kms-decrypt-files.sh",
     }
 
     file { '/tmp/example/example.conf' :

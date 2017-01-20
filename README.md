@@ -13,6 +13,15 @@
   $ eyaml createkeys
   ```
 
+## Use hiera-eyaml-kms
+
+```
+eyaml encrypt -f service.dev.conf | grep string | cut -c 9- | tr -d '\n' > service.dev.conf.eyaml-encrypted
+eyaml decrypt -f service.dev.conf.eyaml-encrypted > service.dev.conf.eyaml-decrypted
+diff --report-identical-files service.dev.conf service.dev.conf.eyaml-decrypted
+````
+
+
 ## Setup the project to pull the puppet-petshop project from Github:
 
 * create deploy key for puppet-petshop and/or docker-petshop

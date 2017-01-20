@@ -7,39 +7,33 @@ class petshop::launch (
   # $container_memory_mb = hiera('container_memory_mb')
   ) {
 
-    file { [
-        '/tmp/launch'
-        ] :
-      ensure  => 'directory',
-      owner   => 'www-data',
-      group   => 'www-data',
-      mode    => '0775',
+    #######################################
+    # Do manual decryption
+    #######################################
+
+    exec { 'manual_decrypt_secrets' :
+      command => '/tmp/secrets/manual-kms/kms-decrypt-files.sh service.conf.encrypted',
+      cwd     => '/tmp/secrets/manual-kms/',
     }
 
-    file { '/tmp/launch/kms-decrypt-files.sh' :
-    ensure  => 'present',
-      owner   => www-data,
-      group   => www-data,
-      mode    => 0755,
-      source => 'puppet:///modules/petshop/kms-secrets/kms-decrypt-files.sh',
-    } ->
-    file { '/tmp/launch/service.conf.encrypted' :
-      ensure  => 'present',
-      owner   => 'www-data',
-      group   => 'www-data',
-      mode    => '0644',
-      source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
-    } ->
-    exec { 'decrypt_launch_secrets' :
-      command => '/tmp/launch/kms-decrypt-files.sh service.conf.encrypted',
-      cwd     => '/tmp/launch',
+    #######################################
+    # Do hiera-eyaml-kms decryption
+    #######################################
+
+    exec { 'eyaml_decrypt_secrets' :
+      command => 'eyaml decrypt -f service.conf.eyaml-encrypted > service.conf',
+      cwd     => '/tmp/secrets/hiera-eyaml-kms/',
     }
 
-    file { '/tmp/launch/service.conf' :
+    # This just sets the owner, group, mode. Doesn't specify content.
+    file { ['/tmp/secrets/manual-kms/service.conf',
+            '/tmp/secrets/hiera-eyaml-kms/service.conf'] :
       ensure  => 'present',
       replace => 'no',
       owner   => 'www-data',
       group   => 'www-data',
       mode    => '0400',
     }
+
+
 }
