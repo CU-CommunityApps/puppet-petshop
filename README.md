@@ -15,6 +15,8 @@
 
 ## Use hiera-eyaml-kms
 
+NOTE: In order for 'eyaml' command two work correctly with KMS at via puppet at launch inside a container running on a local workstation, you must set the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables in the shell that is running puppet or eyaml. E.g. before calling puppet in lauch.sh. For some reason, the hiera-eyaml-kms gem doesn't automatically use the credentials files at ~/.aws, even when they are mapped into a local container using -v ~/.aws:/root/.aws. Arg!
+
 ```
 eyaml encrypt -f service.dev.conf | grep string | cut -c 9- | tr -d '\n' > service.dev.conf.eyaml-encrypted
 eyaml decrypt -f service.dev.conf.eyaml-encrypted > service.dev.conf.eyaml-decrypted
