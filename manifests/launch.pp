@@ -31,7 +31,7 @@ class petshop::launch (
       source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
     } ->
     exec { 'decrypt' :
-      command => "./kms-decrypt-files.sh service.conf.encrypted",
+      command => "/tmp/launch/kms-decrypt-files.sh service.conf.encrypted",
       cwd     => "/tmp/launch"
     }
   }
