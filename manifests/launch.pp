@@ -2,10 +2,9 @@
 # Manifest to be run first thing after container launch.
 #
 class petshop::launch (
-  # $petshop_user_id = hiera('petshop_user_id'),
-  # $petshop_password = hiera('petshop_password'),
-  # $container_memory_mb = hiera('container_memory_mb')
-  # service_conf = hiera('service_conf')
+  $petshop_user_id = hiera('petshop_user_id'),
+  $petshop_password = hiera('petshop_password'),
+  $container_memory_mb = hiera('container_memory_mb')
   ) {
 
     #######################################
