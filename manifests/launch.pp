@@ -5,6 +5,7 @@ class petshop::launch (
   # $petshop_user_id = hiera('petshop_user_id'),
   # $petshop_password = hiera('petshop_password'),
   # $container_memory_mb = hiera('container_memory_mb')
+  # service_conf = hiera('service_conf')
   ) {
 
     #######################################
@@ -16,25 +17,24 @@ class petshop::launch (
       cwd     => '/tmp/secrets/manual-kms/',
     }
 
+    # This just sets the owner, group, mode. Doesn't specify content.
+    file { '/tmp/secrets/manual-kms/service.conf' :
+      ensure  => present,
+      replace => no,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0400,
+    }
+
     #######################################
     # Do hiera-eyaml-kms decryption
     #######################################
 
-    exec { 'eyaml_decrypt_secrets' :
-      command => '/usr/local/bin/eyaml decrypt --trace -f service.conf.eyaml-encrypted > service.conf',
-      cwd     => '/tmp/secrets/hiera-eyaml-kms/',
-      logoutput => 'true',
+    file { '/tmp/secrets/hiera-eyaml-kms/service.conf' :
+        ensure  => present,
+        owner   => www-data,
+        group   => www-data,
+        mode    => 0400,
+        content => hiera('service_conf'),
     }
-
-    # This just sets the owner, group, mode. Doesn't specify content.
-    file { ['/tmp/secrets/manual-kms/service.conf',
-            '/tmp/secrets/hiera-eyaml-kms/service.conf'] :
-      ensure  => 'present',
-      replace => 'no',
-      owner   => 'www-data',
-      group   => 'www-data',
-      mode    => '0400',
-    }
-
-
 }

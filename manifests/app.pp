@@ -72,23 +72,8 @@ class petshop::app (
     ############################################
 
     ############################################
-    # Setting up for manual decryption at launch
+    # Setting up for hiera-eyaml-based decryption at launch
     ############################################
-
-    file { ['/etc/eyaml'] :
-        ensure  => directory,
-        owner   => root,
-        group   => root,
-        mode    => 0755,
-    }
-
-    file { '/etc/eyaml/config.yaml' :
-      ensure  => present,
-      owner   => root,
-      group   => root,
-      mode    => 0644,
-      source => "puppet:///modules/petshop/kms-secrets/eyaml.config",
-    }
 
     file { [
         '/tmp/secrets/hiera-eyaml-kms'] :
@@ -98,13 +83,13 @@ class petshop::app (
         mode    => 0775,
     }
 
-    file { '/tmp/secrets/hiera-eyaml-kms/service.conf.eyaml-encrypted' :
-      ensure  => present,
-      owner   => www-data,
-      group   => www-data,
-      mode    => 0644,
-      source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.eyaml-encrypted",
-    }
+    # file { '/tmp/secrets/hiera-eyaml-kms/service.conf.eyaml-encrypted' :
+    #   ensure  => present,
+    #   owner   => www-data,
+    #   group   => www-data,
+    #   mode    => 0644,
+    #   source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.eyaml-encrypted",
+    # }
 
     ############################################
     # End setup for manual decryption at launch
