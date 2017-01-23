@@ -37,4 +37,14 @@ class petshop::launch (
         mode    => 0400,
         content => hiera('service_conf'),
     }
+
+    # Populate am example template, based on hiera-eyaml-secrets
+    file { '/usr/share/nginx/html/index.html' :
+        ensure  => present,
+        owner   => www-data,
+        group   => www-data,
+        mode    => 0644,
+        content => template('petshop/index.html.erb'),
+      }
+
 }
