@@ -172,12 +172,6 @@ See the kms-key.json in docker-petshop/cloud-formation for a CloudFormation temp
       pHty6uB/kgKpAd0=]
   ```
 
-* Note that the [hiera.yaml](hiera.yaml) configuration file packaged with this project drives the eyaml configuration when Puppet is run within the context of the project Dockerfiles and testing scripts.
-
-* Some text editors have plugins that will allow you to do eyaml encryption and decryption directly, without using the command line. E.g. https://atom.io/packages/hiera-eyaml
-
-* See https://github.com/TomPoulton/hiera-eyaml for further details. The KMS plugin for hiera-eyaml is https://github.com/adenot/hiera-eyaml-kms.
-
 ### Misc hiera-eyaml-kms Notes
 
 * Note that the [hiera.yaml](hiera.yaml) configuration file packaged with this project drives the eyaml configuration when Puppet is run within the context of the project Dockerfiles and testing scripts.
