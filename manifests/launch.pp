@@ -14,6 +14,7 @@ class petshop::launch (
     exec { 'manual_decrypt_secrets' :
       command => '/tmp/secrets/manual-kms/kms-decrypt-files.sh service.conf.encrypted',
       cwd     => '/tmp/secrets/manual-kms/',
+      logoutput => 'true'
     }
 
     # This just sets the owner, group, mode. Doesn't specify content.

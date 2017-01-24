@@ -52,21 +52,39 @@ class petshop::app (
         mode    => 0775,
     }
 
-    file { '/tmp/secrets/manual-kms/service.conf.encrypted' :
-      ensure  => present,
-      owner   => www-data,
-      group   => www-data,
-      mode    => 0644,
-      source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
-    }
-
     file { '/tmp/secrets/manual-kms/kms-decrypt-files.sh' :
       ensure  => present,
       owner   => www-data,
       group   => www-data,
       mode    => 0755,
       source => "puppet:///modules/petshop/kms-secrets/kms-decrypt-files.sh",
+    } ->
+    file { '/tmp/secrets/manual-kms/service.conf.encrypted' :
+      ensure  => present,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0644,
+      source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
+    } ->
+    # An example of Docker build time descryption.
+    # Decrypts the file at build time and save in service.build.conf
+    # The "->" ensures proper ordering for the file and exec resources.
+    exec { 'manual_decrypt_secrets' :
+      command => '/tmp/secrets/manual-kms/kms-decrypt-files.sh service.conf.encrypted && mv service.conf service.build.conf',
+      cwd     => '/tmp/secrets/manual-kms/',
+      logoutput => 'true',
     }
+
+    # This just sets the owner, group, mode. Doesn't specify content.
+    file { '/tmp/secrets/manual-kms/service.build.conf' :
+      ensure  => present,
+      replace => no,
+      owner   => www-data,
+      group   => www-data,
+      mode    => 0400,
+    }
+
+
     ############################################
     # End manual decryption SETUP
     ############################################
@@ -81,6 +99,17 @@ class petshop::app (
         owner   => www-data,
         group   => www-data,
         mode    => 0775,
+    }
+
+    # Populate am example template, based on hiera-eyaml-secrets.
+    # This forms an example of decrypted secrets
+    # being stored in the Docker image.
+    file { '/tmp/secrets/hiera-eyaml-kms/another_service.conf' :
+        ensure  => present,
+        owner   => www-data,
+        group   => www-data,
+        mode    => 0644,
+        content => template('petshop/another_service.conf.erb'),
     }
 
     ############################################
