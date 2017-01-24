@@ -11,14 +11,16 @@ class petshop::launch (
     # Do manual decryption
     #######################################
 
+    # Decrypt the file and save it as service.launch.conf
     exec { 'manual_decrypt_secrets' :
-      command => '/tmp/secrets/manual-kms/kms-decrypt-files.sh service.conf.encrypted',
+      command => '/tmp/secrets/manual-kms/kms-decrypt-files.sh service.conf.encrypted && mv service.conf service.launch.conf',
       cwd     => '/tmp/secrets/manual-kms/',
       logoutput => 'true'
     }
 
     # This just sets the owner, group, mode. Doesn't specify content.
-    file { '/tmp/secrets/manual-kms/service.conf' :
+    # No depency between the exec resource and this file resource is required.
+    file { '/tmp/secrets/manual-kms/service.launch.conf' :
       ensure  => present,
       replace => no,
       owner   => www-data,
@@ -30,21 +32,11 @@ class petshop::launch (
     # Do hiera-eyaml-kms decryption
     #######################################
 
-    file { '/tmp/secrets/hiera-eyaml-kms/service.conf' :
+    file { '/tmp/secrets/hiera-eyaml-kms/service.launch.conf' :
         ensure  => present,
         owner   => www-data,
         group   => www-data,
         mode    => 0400,
         content => hiera('service_conf'),
     }
-
-    # Populate am example template, based on hiera-eyaml-secrets
-    file { '/usr/share/nginx/html/index.html' :
-        ensure  => present,
-        owner   => www-data,
-        group   => www-data,
-        mode    => 0644,
-        content => template('petshop/index.html.erb'),
-      }
-
 }

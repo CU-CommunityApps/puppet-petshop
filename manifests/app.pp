@@ -83,8 +83,6 @@ class petshop::app (
       group   => www-data,
       mode    => 0400,
     }
-
-
     ############################################
     # End manual decryption SETUP
     ############################################
@@ -92,7 +90,6 @@ class petshop::app (
     ############################################
     # Setting up for hiera-eyaml-based decryption at launch
     ############################################
-
     file { [
         '/tmp/secrets/hiera-eyaml-kms'] :
         ensure  => directory,
@@ -101,24 +98,21 @@ class petshop::app (
         mode    => 0775,
     }
 
-    # Populate am example template, based on hiera-eyaml-secrets.
+    # Populate an example template, based on hiera-eyaml-secrets.
     # This forms an example of decrypted secrets
     # being stored in the Docker image.
-    file { '/tmp/secrets/hiera-eyaml-kms/another_service.conf' :
+    file { '/tmp/secrets/hiera-eyaml-kms/service.build.conf' :
         ensure  => present,
         owner   => www-data,
         group   => www-data,
-        mode    => 0644,
-        content => template('petshop/another_service.conf.erb'),
+        mode    => 0400,
+        content => template('petshop/service.conf.erb'),
     }
-
     ############################################
     # End setup for manual decryption at launch
     ############################################
 
-    file { [
-        '/tmp/sample',
-        '/tmp/example'] :
+    file { '/tmp/sample' :
         ensure  => directory,
         owner   => www-data,
         group   => www-data,
@@ -131,14 +125,6 @@ class petshop::app (
       group   => www-data,
       mode    => 0644,
       source => "puppet:///modules/petshop/sample.${environment}.conf",
-    }
-
-    file { '/tmp/example/example.conf' :
-      ensure  => present,
-      owner   => www-data,
-      group   => www-data,
-      mode    => 0644,
-      source  => 'puppet:///modules/petshop/example.conf',
     }
 
     file { '/etc/nginx/sites-available/default' :
