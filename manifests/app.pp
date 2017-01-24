@@ -73,8 +73,7 @@ class petshop::app (
       command => '/tmp/secrets/manual-kms/kms-decrypt-files.sh service.conf.encrypted && mv service.conf service.build.conf',
       cwd     => '/tmp/secrets/manual-kms/',
       logoutput => 'true',
-    }
-
+    } -> 
     # This just sets the owner, group, mode. Doesn't specify content.
     file { '/tmp/secrets/manual-kms/service.build.conf' :
       ensure  => present,
