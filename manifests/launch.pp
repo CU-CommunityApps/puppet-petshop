@@ -32,11 +32,23 @@ class petshop::launch (
     # Do hiera-eyaml-kms decryption
     #######################################
 
-    file { '/tmp/secrets/hiera-eyaml-kms/service.launch.conf' :
+    # Create a whole file from an encrypted hiera-data property (service_conf)
+    file { '/tmp/secrets/hiera-eyaml-kms/service.launch.whole-file.conf' :
         ensure  => present,
         owner   => www-data,
         group   => www-data,
         mode    => 0400,
         content => hiera('service_conf'),
+    }
+
+    # Populate an example template, based on hiera-eyaml-secrets.
+    # This forms an example of decrypting secrets
+    # at launch time.
+    file { '/tmp/secrets/hiera-eyaml-kms/service.launch.conf' :
+        ensure  => present,
+        owner   => www-data,
+        group   => www-data,
+        mode    => 0400,
+        content => template('petshop/service.conf.erb'),
     }
 }

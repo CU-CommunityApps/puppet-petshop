@@ -41,8 +41,10 @@ class petshop::app (
     ###########################################################
 
     ############################################
-    # Setting up for manual decryption at launch
+    # Manual decryption
     ############################################
+
+    # Setup target directories for manual descryption
     file { [
         '/tmp/secrets/',
         '/tmp/secrets/manual-kms'] :
@@ -52,6 +54,7 @@ class petshop::app (
         mode    => 0775,
     }
 
+    # Get the decryption script into the image
     file { '/tmp/secrets/manual-kms/kms-decrypt-files.sh' :
       ensure  => present,
       owner   => www-data,
@@ -59,6 +62,7 @@ class petshop::app (
       mode    => 0755,
       source => "puppet:///modules/petshop/kms-secrets/kms-decrypt-files.sh",
     } ->
+    # Get the encrypted file in the image
     file { '/tmp/secrets/manual-kms/service.conf.encrypted' :
       ensure  => present,
       owner   => www-data,
@@ -66,14 +70,14 @@ class petshop::app (
       mode    => 0644,
       source => "puppet:///modules/petshop/kms-secrets/service.${environment}.conf.encrypted",
     } ->
-    # An example of Docker build time descryption.
+    # An example of Docker build-time decryption.
     # Decrypts the file at build time and save in service.build.conf
     # The "->" ensures proper ordering for the file and exec resources.
     exec { 'manual_decrypt_secrets' :
       command => '/tmp/secrets/manual-kms/kms-decrypt-files.sh service.conf.encrypted && mv service.conf service.build.conf',
       cwd     => '/tmp/secrets/manual-kms/',
       logoutput => 'true',
-    } -> 
+    } ->
     # This just sets the owner, group, mode. Doesn't specify content.
     file { '/tmp/secrets/manual-kms/service.build.conf' :
       ensure  => present,
@@ -83,12 +87,14 @@ class petshop::app (
       mode    => 0400,
     }
     ############################################
-    # End manual decryption SETUP
+    # End manual decryption
     ############################################
 
     ############################################
-    # Setting up for hiera-eyaml-based decryption at launch
+    # hiera-eyaml-based decryption
     ############################################
+
+    # Setup target directories
     file { [
         '/tmp/secrets/hiera-eyaml-kms'] :
         ensure  => directory,
@@ -107,8 +113,9 @@ class petshop::app (
         mode    => 0400,
         content => template('petshop/service.conf.erb'),
     }
+
     ############################################
-    # End setup for manual decryption at launch
+    # Other sample Puppet directives, not related to secrets
     ############################################
 
     file { '/tmp/sample' :
